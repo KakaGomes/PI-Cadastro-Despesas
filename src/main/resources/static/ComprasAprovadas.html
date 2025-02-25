@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compras Aprovadas</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Compras Aprovadas</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Fornecedor</th>
+                    <th>Valor</th>
+                    <th>Data Pagamento</th>
+                    <th>Data Entrega</th>
+                    <th>Número Pedido</th>
+                    <th>Comprador</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aqui os dados das compras aprovadas serão inseridos dinamicamente -->
+            </tbody>
+        </table>
+        <button onclick="exportarPDF()">Exportar PDF</button>
+    </div>
+    <script>
+        function exportarPDF() {
+            window.print(); // Simples função para exportar como PDF via impressão
+        }
+    </script>
+</body>
+</html>

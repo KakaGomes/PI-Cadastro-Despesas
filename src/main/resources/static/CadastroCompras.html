@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Compras</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        async function pesquisarFornecedor() {
+            let termo = document.getElementById("fornecedor").value.toLowerCase();
+            let lista = document.getElementById("lista_fornecedores");
+            lista.innerHTML = "";
+            
+            if (termo.length < 2) return; // Só pesquisa após 2 caracteres
+            
+            let response = await fetch(`/api/fornecedores?query=${termo}`);
+            let fornecedores = await response.json();
+            
+            fornecedores.forEach(fornecedor => {
+                let item = document.createElement("div");
+                item.innerText = fornecedor.nome;
+                item.onclick = function() {
+                    document.getElementById("fornecedor").value = fornecedor.nome;
+                    lista.innerHTML = "";
+                };
+                lista.appendChild(item);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Cadastro de Compras</h2>
+        <form action="/compras" method="POST">
+            <label for="fornecedor">Fornecedor:</label>
+            <input type="text" id="fornecedor" name="fornecedor" onkeyup="pesquisarFornecedor()" required>
+            <div id="lista_fornecedores" class="autocomplete-list"></div>
+            
+            <label for="numero_pedido">Número Pedido:</label>
+            <input type="text" id="numero_pedido" name="numero_pedido" required>
+            
+            <label for="valor">Valor:</label>
+            <input type="number" step="0.01" id="valor" name="valor" required>
+            
+            <label for="data_pedido">Data Pedido:</label>
+            <input type="date" id="data_pedido" name="data_pedido" required>
+            
+            <label for="data_pagamento">Data Pagamento:</label>
+            <input type="date" id="data_pagamento" name="data_pagamento">
+            
+            <label for="data_entrega">Data Entrega:</label>
+            <input type="date" id="data_entrega" name="data_entrega">
+            
+            <label for="descricao">Descrição Pedido:</label>
+            <textarea id="descricao" name="descricao" rows="3"></textarea>
+            
+            <button type="submit">Cadastrar</button>
+            <button type="reset">Limpar</button>
+        </form>
+    </div>
+</body>
+</html>

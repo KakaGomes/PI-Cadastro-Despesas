@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Compras com Filtros</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        function filtrarCompras() {
+            let fornecedor = document.getElementById("fornecedor").value.toLowerCase();
+            let dataInicio = document.getElementById("data_inicio").value;
+            let dataFim = document.getElementById("data_fim").value;
+            let linhas = document.querySelectorAll(".relatorio-lista tr");
+            
+            linhas.forEach(linha => {
+                let nomeFornecedor = linha.children[0].innerText.toLowerCase();
+                let dataCompra = linha.children[2].innerText;
+                
+                let exibir = true;
+                
+                if (fornecedor && !nomeFornecedor.includes(fornecedor)) {
+                    exibir = false;
+                }
+                
+                if (dataInicio && dataCompra < dataInicio) {
+                    exibir = false;
+                }
+                
+                if (dataFim && dataCompra > dataFim) {
+                    exibir = false;
+                }
+                
+                linha.style.display = exibir ? "table-row" : "none";
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Relatório de Compras</h2>
+        <label for="fornecedor">Fornecedor:</label>
+        <input type="text" id="fornecedor" placeholder="Digite o nome do fornecedor">
+        
+        <label for="data_inicio">Data Início:</label>
+        <input type="date" id="data_inicio">
+        
+        <label for="data_fim">Data Fim:</label>
+        <input type="date" id="data_fim">
+        
+        <button onclick="filtrarCompras()">Filtrar</button>
+        
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Fornecedor</th>
+                    <th>Valor</th>
+                    <th>Data Compra</th>
+                    <th>Data Pagamento</th>
+                    <th>Data Entrega</th>
+                    <th>Número Pedido</th>
+                    <th>Comprador</th>
+                </tr>
+            </thead>
+            <tbody class="relatorio-lista">
+                <!-- Os dados do relatório serão carregados aqui -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
