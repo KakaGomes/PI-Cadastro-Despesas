@@ -40,22 +40,25 @@ document.querySelector("form").addEventListener("submit", function(event) {
     const usuario = document.getElementById("usuario").value;
     const senha = document.getElementById("senha").value;
 
-    fetch("/login", {
+    fetch("/login", {  
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ usuario, senha })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Usuário ou senha inválidos");
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.tipo === "Administrador") {
             window.location.href = "diretor.html";
         } else if (data.tipo === "Comprador") {
             window.location.href = "comprador.html";
-        } else {
-            alert("Usuário ou senha inválidos!");
         }
     })
-    .catch(error => console.error("Erro no login:", error));
+    .catch(error => alert(error.message));
 });

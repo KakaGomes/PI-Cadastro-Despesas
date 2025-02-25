@@ -11,7 +11,7 @@
             let lista = document.getElementById("lista_fornecedores");
             lista.innerHTML = "";
             
-            if (termo.length < 2) return; // Só pesquisa após 2 caracteres
+            if (termo.length < 2) return; 
             
             let response = await fetch(`/api/fornecedores?query=${termo}`);
             let fornecedores = await response.json();
