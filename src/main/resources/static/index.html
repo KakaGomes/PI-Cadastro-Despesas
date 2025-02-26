@@ -9,7 +9,7 @@
 <body>
     <div class="login-container">
         <h2>Seja Bem-Vindo</h2>
-        <form action="#" method="POST">
+        <form id="loginForm">
             <label for="usuario">Usuário:</label>
             <input type="text" id="usuario" name="usuario" required>
             
@@ -18,8 +18,11 @@
             
             <button type="submit">Entrar</button>
         </form>
+        
+        <p id="mensagemErro" style="color: red; display: none;">Usuário ou senha inválidos.</p>
     </div>
     
+    <!-- O SCRIPT DEVE ESTAR NO FINAL DO BODY -->
     <script src="js/Script.js"></script>
 </body>
 </html>
