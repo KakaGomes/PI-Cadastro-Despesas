@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial - Minha Empresa</title>
+    <style>
+        /* Estilos Gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Fundo com imagem */
+        body {
+            background: url('../static/img/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        /* Barra superior */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Botão de Login */
+        .login-btn {
+            background: #4A90E2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #357ABD;
+        }
+
+        /* Conteúdo principal */
+        .main-content {
+            max-width: 600px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+        }
+
+        .main-content h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .main-content p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de Navegação -->
+    <div class="navbar">
+        <h1>Minha Empresa</h1>
+        <button class="login-btn" onclick="login()">Login</button>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <h2>Bem-vindo à Minha Empresa</h2>
+        <p>Oferecemos soluções inovadoras para o seu negócio. Explore nossos serviços e descubra como podemos ajudar você.</p>
+    </div>
+
+    <script>
+        function login() {
+            window.location.href = "login"; // Redireciona para a página de login
+        }
+    </script>
+
+</body>
+</html>

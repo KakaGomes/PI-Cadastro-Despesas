@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Caminho corrigido -->
+</head>
+<body>
+    <div class="login-container">
+        <h2>Seja Bem-Vindo</h2>
+        <form id="loginForm" action="/login" method="post">  <!-- Definindo a action e método POST -->
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" name="usuario" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p id="mensagemErro" style="color: red; display: none;">Usuário ou senha inválidos.</p>
+    </div>
+
+    <!-- O SCRIPT DEVE ESTAR NO FINAL DO BODY -->
+    <script>
+        document.getElementById("loginForm").onsubmit = async function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            const usuario = document.getElementById("usuario").value;
+            const senha = document.getElementById("senha").value;
+
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ usuario, senha })
+            });
+
+            if (response.ok) {
+                window.location.href = "/comprador"; // Redireciona após login bem-sucedido
+            } else {
+                document.getElementById("mensagemErro").style.display = "block";
+            }
+        };
+    </script>
+</body>
+</html>
