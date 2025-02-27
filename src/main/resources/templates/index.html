@@ -13,10 +13,11 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Fundo com imagem */
-        body {
+         /* Fundo com imagem */
+         body {
             background: url('../static/img/background.jpg') no-repeat center center fixed;
             background-size: cover;
+            background-color: #222; /* Cor de fundo caso a imagem não carregue */
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -90,8 +91,8 @@
     <div class="main-content">
         <h2>Bem-vindo à Minha Empresa</h2>
         <p>Oferecemos soluções inovadoras para o seu negócio. Explore nossos serviços e descubra como podemos ajudar você.</p>
+        
     </div>
-
     <script>
         function login() {
             window.location.href = "login"; // Redireciona para a página de login
