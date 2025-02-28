@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- Caminho corrigido -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div class="login-container">
         <h2>Seja Bem-Vindo</h2>
-        <form id="loginForm" action="/login" method="post">  <!-- Definindo a action e método POST -->
+        <form id="loginForm">
             <label for="usuario">Usuário:</label>
             <input type="text" id="usuario" name="usuario" required>
 
@@ -22,28 +22,39 @@
         <p id="mensagemErro" style="color: red; display: none;">Usuário ou senha inválidos.</p>
     </div>
 
-    <!-- O SCRIPT DEVE ESTAR NO FINAL DO BODY -->
     <script>
-        document.getElementById("loginForm").onsubmit = async function(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+       document.getElementById("loginForm").onsubmit = async function(event) {
+    event.preventDefault();
 
-            const usuario = document.getElementById("usuario").value;
-            const senha = document.getElementById("senha").value;
+    const usuario = document.getElementById("usuario").value;
+    const senha = document.getElementById("senha").value;
 
-            const response = await fetch("/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ usuario, senha })
-            });
+    const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ usuario, senha })
+    });
 
-            if (response.ok) {
-                window.location.href = "/comprador"; // Redireciona após login bem-sucedido
-            } else {
-                document.getElementById("mensagemErro").style.display = "block";
-            }
-        };
+    if (response.ok) {
+        const data = await response.json();
+        const tipoUsuario = data.tipo ? data.tipo.toLowerCase() : "";
+
+        if (tipoUsuario === "administrador") {
+            window.location.href = "/diretor"; // Agora o Spring servirá a página corretamente
+        } else if (tipoUsuario === "comprador") {
+            window.location.href = "/comprador";
+        } else {
+            document.getElementById("mensagemErro").innerText = "Tipo de usuário inválido.";
+            document.getElementById("mensagemErro").style.display = "block";
+        }
+    } else {
+        document.getElementById("mensagemErro").style.display = "block";
+    }
+};
+
     </script>
+    
 </body>
 </html>

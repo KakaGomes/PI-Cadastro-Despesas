@@ -227,6 +227,15 @@
             <li><a onclick="showPage('ComprasAprovadas')">Compras Aprovadas</a></li>
             <li><a onclick="showPage('RelatorioCompras')">Relatório de Compras</a></li>
             <li><a onclick="showPage('PesquisarFornecedor')">Pesquisar Fornecedor</a></li>
+  
+
+
+<li><a id="btnVoltar">Logout</a></li>
+<script>
+    document.getElementById('btnVoltar').addEventListener('click', function() {
+        window.history.back();
+    });
+</script>
         </ul>
     </div>
 
@@ -242,12 +251,14 @@
                     <p>Esta é a página inicial do painel de controle da sua empresa</p>
                 </div>
                 <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
-                    <img src="../static/img/sua_foto.jpg" alt="Foto do Diretor" style="width: 550px; height: 550px; border-radius: 10px;">
+                    <img src="/img/sua_foto.jpg" alt="Foto do Diretor" style="width: 550px; height: 550px; border-radius: 10px;">
+
                 </div>
             </div>
         </div>
         
-       
+     
+        
         
         <div id="cadastroUsuario" class="page">
             <h2>Cadastro de Usuário</h2>
@@ -399,6 +410,8 @@
                 </tbody>
             </table>
         </div>
+
+
     </div> <!-- Fechamento correto da div .content -->
 
     <footer style="position: absolute; bottom: 10px; width: calc(100% - 250px); text-align: center;">
