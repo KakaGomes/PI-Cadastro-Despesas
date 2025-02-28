@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.PI.Entities.Usuario;
 
-
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Usuario findByUsuarioAndSenha(String usuario, String senha);

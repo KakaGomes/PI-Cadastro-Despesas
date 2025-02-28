@@ -14,7 +14,7 @@ public class FornecedorController {
     private FornecedorRepository fornecedorRepository;
 
     @GetMapping
-    public List<FornecedorEntities > getAllFornecedores() {
+    public List<FornecedorEntities> getAllFornecedores() {
         return fornecedorRepository.findAll();
     }
 
@@ -29,7 +29,8 @@ public class FornecedorController {
     }
 
     @PutMapping("/{id}")
-    public FornecedorEntities updateFornecedor(@PathVariable Long id, @RequestBody FornecedorEntities fornecedorDetails) {
+    public FornecedorEntities updateFornecedor(@PathVariable Long id,
+            @RequestBody FornecedorEntities fornecedorDetails) {
         FornecedorEntities fornecedor = fornecedorRepository.findById(id).orElse(null);
         if (fornecedor != null) {
             fornecedor.setNome(fornecedorDetails.getNome());

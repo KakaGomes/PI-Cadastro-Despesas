@@ -1,80 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Controle</title>
     <style>
-     body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #4A90E2, #9013FE);
-    margin: 0;
-    padding: 0;
-    display: flex;
-    height: 100vh;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4A90E2, #9013FE);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
 
-.sidebar {
-    width: 250px;
-    background: #333;
-    color: white;
-    height: 100vh;
-    padding: 20px;
-    position: fixed;
-    left: 0;
-    top: 0;
-}
+        .sidebar {
+            width: 250px;
+            background: #333;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
 
-.sidebar h2 {
-    margin-top: 0;
-}
+        .sidebar h2 {
+            margin-top: 0;
+        }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
 
-.sidebar ul li {
-    margin: 15px 0;
-}
+        .sidebar ul li {
+            margin: 15px 0;
+        }
 
-.sidebar ul li a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 10px;
-    background: #444;
-    border-radius: 5px;
-    cursor: pointer;
-}
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            background: #444;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-.sidebar ul li a:hover {
-    background: #555;
-}
+        .sidebar ul li a:hover {
+            background: #555;
+        }
 
-.content {
-    margin-left: 600px; /* Alinha o conteúdo com a sidebar */
-    padding: 20px;
-    width: calc(100% - 250px);
-    display: flex;
-    align-items: flex-start; /* Faz com que o conteúdo comece mais para cima */
-    height: 100vh;
-}
+        .content {
+            margin-left: 600px;
+            padding: 20px;
+            width: calc(100% - 250px);
+            display: flex;
+            align-items: flex-start;
+            height: 100vh;
+        }
 
-.page {
-    display: none;
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    margin-top: 0px; /* Ajusta a posição do conteúdo para cima */
-}
+        .page {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0px;
+        }
 
-.page.active {
-    display: block;
-}
+        .page.active {
+            display: block;
+        }
 
 
         h2 {
@@ -90,7 +91,8 @@
             margin-top: 10px;
         }
 
-        input, textarea {
+        input,
+        textarea {
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
@@ -136,11 +138,14 @@
             margin-top: 20px;
         }
 
-        table, th, td {
+        table,
+        th,
+        td {
             border: 1px solid #ccc;
         }
 
-        th, td {
+        th,
+        td {
             padding: 10px;
             text-align: left;
         }
@@ -155,67 +160,68 @@
         window.onload = () => showPage('cadastroUsuario');
     </script>
 
-<script>
-    function filtrarCompras() {
-        let fornecedor = document.getElementById("fornecedor").value.toLowerCase();
-        let dataInicio = document.getElementById("data_inicio").value;
-        let dataFim = document.getElementById("data_fim").value;
-        let linhas = document.querySelectorAll(".relatorio-lista tr");
-        
-        linhas.forEach(linha => {
-            let nomeFornecedor = linha.children[0].innerText.toLowerCase();
-            let dataCompra = linha.children[2].innerText;
-            
-            let exibir = true;
-            
-            if (fornecedor && !nomeFornecedor.includes(fornecedor)) {
-                exibir = false;
-            }
-            
-            if (dataInicio && dataCompra < dataInicio) {
-                exibir = false;
-            }
-            
-            if (dataFim && dataCompra > dataFim) {
-                exibir = false;
-            }
-            
-            linha.style.display = exibir ? "table-row" : "none";
-        });
-    }
-</script>
+    <script>
+        function filtrarCompras() {
+            let fornecedor = document.getElementById("fornecedor").value.toLowerCase();
+            let dataInicio = document.getElementById("data_inicio").value;
+            let dataFim = document.getElementById("data_fim").value;
+            let linhas = document.querySelectorAll(".relatorio-lista tr");
+
+            linhas.forEach(linha => {
+                let nomeFornecedor = linha.children[0].innerText.toLowerCase();
+                let dataCompra = linha.children[2].innerText;
+
+                let exibir = true;
+
+                if (fornecedor && !nomeFornecedor.includes(fornecedor)) {
+                    exibir = false;
+                }
+
+                if (dataInicio && dataCompra < dataInicio) {
+                    exibir = false;
+                }
+
+                if (dataFim && dataCompra > dataFim) {
+                    exibir = false;
+                }
+
+                linha.style.display = exibir ? "table-row" : "none";
+            });
+        }
+    </script>
 
 
-<script>
-    function pesquisarFornecedor() {
-        let termo = document.getElementById("busca").value.toLowerCase();
-        let linhas = document.querySelectorAll(".fornecedor-lista tr");
-        
-        linhas.forEach(linha => {
-            let nome = linha.children[0].innerText.toLowerCase();
-            let cnpj = linha.children[1].innerText.toLowerCase();
-            
-            if (nome.includes(termo) || cnpj.includes(termo)) {
-                linha.style.display = "table-row";
-            } else {
-                linha.style.display = "none";
-            }
-        });
-    }
-</script>
+    <script>
+        function pesquisarFornecedor() {
+            let termo = document.getElementById("busca").value.toLowerCase();
+            let linhas = document.querySelectorAll(".fornecedor-lista tr");
 
-<script>
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(page => {
-            page.classList.remove('active');
-        });
-        document.getElementById(pageId).classList.add('active');
-    }
+            linhas.forEach(linha => {
+                let nome = linha.children[0].innerText.toLowerCase();
+                let cnpj = linha.children[1].innerText.toLowerCase();
 
-    // Garante que a página inicial seja "BEM VINDO DIRETOR"
-    window.onload = () => showPage('bemVindoDiretor');
-</script>
+                if (nome.includes(termo) || cnpj.includes(termo)) {
+                    linha.style.display = "table-row";
+                } else {
+                    linha.style.display = "none";
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+
+        window.onload = () => showPage('bemVindoDiretor');
+    </script>
 </head>
+
 <body>
     <div class="sidebar">
         <h1>Menu</h1>
@@ -227,39 +233,40 @@
             <li><a onclick="showPage('ComprasAprovadas')">Compras Aprovadas</a></li>
             <li><a onclick="showPage('RelatorioCompras')">Relatório de Compras</a></li>
             <li><a onclick="showPage('PesquisarFornecedor')">Pesquisar Fornecedor</a></li>
-  
 
 
-<li><a id="btnVoltar">Logout</a></li>
-<script>
-    document.getElementById('btnVoltar').addEventListener('click', function() {
-        window.history.back();
-    });
-</script>
+
+            <li><a id="btnVoltar">Logout</a></li>
+            <script>
+                document.getElementById('btnVoltar').addEventListener('click', function () {
+                    window.history.back();
+                });
+            </script>
         </ul>
     </div>
 
-   
-     
-    <!-- Abertura correta da div .content -->
+
+
+
     <div class="content">
-        
+
         <div id="bemVindoDiretor" class="page active">
-            <div >
+            <div>
                 <div style="flex: 1; padding-right: 20px;">
                     <h1>BEM VINDO DIRETOR</h1>
                     <p>Esta é a página inicial do painel de controle da sua empresa</p>
                 </div>
                 <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
-                    <img src="/img/sua_foto.jpg" alt="Foto do Diretor" style="width: 550px; height: 550px; border-radius: 10px;">
+                    <img src="/img/sua_foto.jpg" alt="Foto do Diretor"
+                        style="width: 550px; height: 550px; border-radius: 10px;">
 
                 </div>
             </div>
         </div>
-        
-     
-        
-        
+
+
+
+
         <div id="cadastroUsuario" class="page">
             <h2>Cadastro de Usuário</h2>
             <form action="/usuarios" method="POST">
@@ -270,14 +277,14 @@
                 <label for="senha">Senha:</label>
                 <input type="password" id="senha" name="senha" required>
                 <label for="acesso">Acesso:</label>
-            <select id="acesso" name="acesso">
-                <option value="Administrador">Administrador</option>
-                <option value="Comprador">Comprador</option>
-            </select>
+                <select id="acesso" name="acesso">
+                    <option value="Administrador">Administrador</option>
+                    <option value="Comprador">Comprador</option>
+                </select>
                 <button type="submit">Cadastrar Usuário</button>
             </form>
         </div>
-        
+
         <div id="CadastroCompras" class="page">
             <h2>Cadastro de Compras</h2>
             <form action="/compras" method="POST">
@@ -305,10 +312,10 @@
             <form action="/fornecedores" method="POST">
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome" required>
-                
+
                 <label for="cnpj">CNPJ:</label>
                 <input type="text" id="cnpj" name="cnpj" required>
-                
+
                 <button type="submit">Cadastrar Fornecedor</button>
                 <button type="reset">Limpar</button>
             </form>
@@ -331,22 +338,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        
+
                     </tbody>
                 </table>
                 <button onclick="aprovarCompra()">Aprovar</button>
                 <button onclick="cancelarCompra()">Cancelar</button>
-            </div>
-            <script>
-                function aprovarCompra() {
-                    alert("Compra aprovada com sucesso!");
-                }
-                function cancelarCompra() {
-                    alert("Compra cancelada.");
-                }
-            </script>
-            </form>
-    
+        </div>
+        <script>
+            function aprovarCompra() {
+                alert("Compra aprovada com sucesso!");
+            }
+            function cancelarCompra() {
+                alert("Compra cancelada.");
+            }
+        </script>
+        </form>
+
 
         <div id="ComprasAprovadas" class="page">
             <h2>Compras Aprovadas</h2>
@@ -362,7 +369,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Dados dinâmicos -->
+
                 </tbody>
             </table>
             <button onclick="exportarPDF()">Exportar PDF</button>
@@ -390,7 +397,7 @@
                     </tr>
                 </thead>
                 <tbody class="relatorio-lista">
-                    <!-- Dados dinâmicos -->
+
                 </tbody>
             </table>
         </div>
@@ -406,13 +413,13 @@
                     </tr>
                 </thead>
                 <tbody class="fornecedor-lista">
-                    <!-- Dados dinâmicos -->
+
                 </tbody>
             </table>
         </div>
 
 
-    </div> <!-- Fechamento correto da div .content -->
+    </div>
 
     <footer style="position: absolute; bottom: 10px; width: calc(100% - 250px); text-align: center;">
         <p>&copy; 2025 Minha Empresa. Todos os direitos reservados.</p>

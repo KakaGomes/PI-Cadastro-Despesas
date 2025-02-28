@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Inicial - EUAK BUSINESS</title>
     <style>
-        /* Estilos Gerais */
         * {
             margin: 0;
             padding: 0;
@@ -13,11 +13,11 @@
             font-family: Arial, sans-serif;
         }
 
-         /* Fundo com imagem */
-         body {
+
+        body {
             background: url('/img/background.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-color: #222; /* Cor de fundo caso a imagem não carregue */
+            background-color: #222;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -27,7 +27,7 @@
             color: white;
         }
 
-        /* Barra superior */
+
         .navbar {
             position: fixed;
             top: 0;
@@ -45,7 +45,7 @@
             font-size: 24px;
         }
 
-        /* Botão de Login */
+
         .login-btn {
             background: #4A90E2;
             color: white;
@@ -60,7 +60,7 @@
             background: #357ABD;
         }
 
-        /* Conteúdo principal */
+
         .main-content {
             max-width: 600px;
             padding: 20px;
@@ -79,29 +79,32 @@
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Barra de Navegação -->
+
     <div class="navbar">
         <h1>EUAK BUSINESS</h1>
         <button class="login-btn" onclick="login()">Login</button>
     </div>
 
-    <!-- Conteúdo Principal -->
+
     <div class="main-content">
         <h2>Bem-vindo à EUAK BUSINESS</h2>
         <p>"O sucesso é a soma de pequenos esforços repetidos diariamente." 💪✨
             <br>
             Aqui, cada compra é um passo para algo maior. Conecte-se, explore e descubra novas oportunidades!
             <br>
-            🚀 Que sua jornada hoje seja incrível!</p>
-        
+            🚀 Que sua jornada hoje seja incrível!
+        </p>
+
     </div>
     <script>
         function login() {
-            window.location.href = "login"; // Redireciona para a página de login
+            window.location.href = "login";
         }
     </script>
 
 </body>
+
 </html>

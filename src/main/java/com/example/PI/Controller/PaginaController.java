@@ -8,11 +8,11 @@ public class PaginaController {
 
     @GetMapping("/diretor")
     public String paginaDiretor() {
-        return "diretor"; // Nome do arquivo dentro de templates/diretor.html
+        return "diretor";
     }
 
     @GetMapping("/comprador")
     public String paginaComprador() {
-        return "comprador"; // Nome do arquivo dentro de templates/comprador.html
+        return "comprador";
     }
 }

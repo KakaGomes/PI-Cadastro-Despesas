@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "usuario") 
+@Table(name = "usuario")
 public class Usuario {
 
     @Id
@@ -16,13 +16,13 @@ public class Usuario {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String usuario;  
+    private String usuario;
 
     @Column(nullable = false)
     private String senha;
 
     @Column(nullable = false)
-    private String tipo; 
+    private String tipo;
 
     // Getters e Setters
     public Long getId() {

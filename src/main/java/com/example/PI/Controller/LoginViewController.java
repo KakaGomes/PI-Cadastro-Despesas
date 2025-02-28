@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class LoginViewController {
-    
+
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // O Spring buscará "login.html" dentro de "templates"
+        return "login";
     }
 }

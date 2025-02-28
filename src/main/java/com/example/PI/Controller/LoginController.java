@@ -25,7 +25,7 @@ public class LoginController {
         Usuario user = usuarioRepository.findByUsuarioAndSenha(usuario.getUsuario(), usuario.getSenha());
 
         if (user != null) {
-            return ResponseEntity.ok(Collections.singletonMap("tipo", user.getTipo())); 
+            return ResponseEntity.ok(Collections.singletonMap("tipo", user.getTipo()));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos");
         }

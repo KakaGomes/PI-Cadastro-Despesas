@@ -17,7 +17,7 @@ public class DespesaController {
 
     @GetMapping
     public List<DespesaEntities> listarDespesas() {
-        return repository.findAll(); 
+        return repository.findAll();
     }
 
     @PostMapping
