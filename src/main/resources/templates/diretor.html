@@ -583,13 +583,12 @@
                             </tr>
                         </thead>
                         <tbody>
-    
+
                         </tbody>
                     </table>
-                    <button onclick="aprovarCompra()">Aprovar</button>
-                    <button onclick="cancelarCompra()">Cancelar</button>
+                </form>
             </div>
-    
+
             <script>
                 function carregarComprasPendentes() {
                     fetch('/compras/pendentes')
@@ -597,10 +596,10 @@
                         .then(data => {
                             let tabela = document.querySelector("#AprovarCompras tbody");
                             tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
-            
+
                             data.forEach(compra => {
                                 let row = document.createElement("tr");
-            
+
                                 row.innerHTML = `
                                     <td>${compra.fornecedor.nome}</td>
                                     <td>R$ ${compra.valor.toFixed(2)}</td>
@@ -610,8 +609,8 @@
                                     <td>${compra.numeroPedido}</td>
                                     <td>${compra.comprador || "Não definido"}</td>
                                     <td>
-                                        <button onclick="aprovarCompra(${compra.id})">Aprovar</button>
-                                        <button onclick="cancelarCompra(${compra.id})">Cancelar</button>
+                                        <button type="button" onclick="aprovarCompra(${compra.id})">Aprovar</button>
+                                        <button type="button" onclick="cancelarCompra(${compra.id})">Cancelar</button>
                                     </td>
                                 `;
                                 tabela.appendChild(row);
@@ -619,28 +618,47 @@
                         })
                         .catch(error => console.error("Erro ao carregar compras pendentes:", error));
                 }
-            
+
                 document.addEventListener("DOMContentLoaded", function () {
                     document.querySelector("a[onclick=\"showPage('AprovarCompras')\"]")
                         .addEventListener("click", carregarComprasPendentes);
                 });
-            
+
                 function aprovarCompra(id) {
                     fetch(`/compras/aprovar/${id}`, { method: "PUT" })
                         .then(response => response.text())
                         .then(() => {
-                            alert("Compra aprovada com sucesso!");
-                            carregarComprasPendentes(); // Atualiza a tabela após aprovação
+                            Swal.fire({
+                                title: "Confirmação",
+                                text: "Deseja realmente aprovar esta compra?",
+                                showCancelButton: true,
+                                confirmButtonText: "Sim, aprovar",
+                                cancelButtonText: "Cancelar"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    carregarComprasPendentes(); // Atualiza a tabela após cancelamento
+                                }
+                            });
                         })
                         .catch(error => console.error("Erro ao aprovar compra:", error));
                 }
-            
+
                 function cancelarCompra(id) {
                     fetch(`/compras/cancelar/${id}`, { method: "PUT" })
                         .then(response => response.text())
                         .then(() => {
-                            alert("Compra cancelada.");
-                            carregarComprasPendentes(); // Atualiza a tabela após cancelamento
+                            Swal.fire({
+                                title: "Confirmação",
+                                text: "Deseja realmente aprovar esta compra?",
+                                showCancelButton: true,
+                                confirmButtonText: "Sim, aprovar",
+                                cancelButtonText: "Cancelar"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                              
+                                carregarComprasPendentes(); // Atualiza a tabela após cancelamento
+                            }
+                            });
                         })
                         .catch(error => console.error("Erro ao cancelar compra:", error));
                 }
