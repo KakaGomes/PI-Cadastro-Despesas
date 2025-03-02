@@ -63,3 +63,38 @@ document.querySelector("form").addEventListener("submit", function (event) {
         .catch(error => alert(error.message));
 });
 
+const form = document.getElementById("cadastroForm");
+
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const usuario = document.getElementById("usuario").value;
+    const senha = document.getElementById("senha").value;
+    const nome = document.getElementById("nome").value;
+    const tipo = document.getElementById("tipo").value;
+
+    fetch("http://localhost:8080/usuarios", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nome: nome,
+            usuario: usuario,
+            senha: senha,
+            tipo: tipo
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Erro ao cadastrar usuário");
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert("Usuário cadastrado com sucesso!");
+        window.location.href = "/pagina-de-sucesso";
+    })
+    .catch(error => console.error("Erro:", error));
+});
+

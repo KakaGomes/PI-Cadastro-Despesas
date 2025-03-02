@@ -1,0 +1,6 @@
+<select id="fornecedor_id" name="fornecedor_id" required>
+    <option value="">Selecione um fornecedor</option>
+    <th:block th:each="fornecedor : ${fornecedores}">
+        <option th:value="${fornecedor.id}" th:text="${fornecedor.nome}"></option>
+    </th:block>
+</select>

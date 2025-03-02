@@ -15,4 +15,5 @@ public class PaginaController {
     public String paginaComprador() {
         return "comprador";
     }
+    
 }

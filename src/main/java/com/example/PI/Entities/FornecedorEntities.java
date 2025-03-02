@@ -3,6 +3,8 @@ package com.example.PI.Entities;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "fornecedores")
 public class FornecedorEntities {
@@ -11,17 +13,12 @@ public class FornecedorEntities {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String nome;
-
-    @Column(nullable = false, unique = true)
     private String cnpj;
 
     @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL)
-    private List<DespesaEntities> despesas;
-
-    public FornecedorEntities() {
-    }
+    @JsonIgnore  // ⬅ EVITA LOOP INFINITO AO SERIALIZAR
+    private List<DespesaEntities> compras;
 
     // Getters e Setters
     public Long getId() {
@@ -48,11 +45,4 @@ public class FornecedorEntities {
         this.cnpj = cnpj;
     }
 
-    public List<DespesaEntities> getDespesas() {
-        return despesas;
-    }
-
-    public void setDespesas(List<DespesaEntities> despesas) {
-        this.despesas = despesas;
-    }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle</title>
+    <title>Pagina Diretor</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -191,23 +191,32 @@
     </script>
 
 
-    <script>
-        function pesquisarFornecedor() {
-            let termo = document.getElementById("busca").value.toLowerCase();
-            let linhas = document.querySelectorAll(".fornecedor-lista tr");
+<script>
+    function pesquisarFornecedor() {
+        let termo = document.getElementById("busca").value.trim();
 
-            linhas.forEach(linha => {
-                let nome = linha.children[0].innerText.toLowerCase();
-                let cnpj = linha.children[1].innerText.toLowerCase();
+        fetch(`/fornecedores/buscar?termo=${encodeURIComponent(termo)}`)
+            .then(response => response.json())
+            .then(data => {
+                let tabela = document.querySelector(".fornecedor-lista");
+                tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
 
-                if (nome.includes(termo) || cnpj.includes(termo)) {
-                    linha.style.display = "table-row";
-                } else {
-                    linha.style.display = "none";
-                }
-            });
-        }
-    </script>
+                data.forEach(fornecedor => {
+                    let row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${fornecedor.nome}</td>
+                        <td>${fornecedor.cnpj}</td>
+                        <td>R$ ${fornecedor.totalAprovado.toFixed(2)}</td>
+                        <td>R$ ${fornecedor.totalPendente.toFixed(2)}</td>
+                    `;
+                    tabela.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Erro ao buscar fornecedores:", error));
+    }
+</script>
+
 
     <script>
         function showPage(pageId) {
@@ -220,6 +229,222 @@
 
         window.onload = () => showPage('bemVindoDiretor');
     </script>
+<script>
+    function pesquisarFornecedor() {
+        let termo = document.getElementById("fornecedor").value;
+        if (termo.length < 2) {
+            document.getElementById("autocomplete-list").innerHTML = "";
+            return;
+        }
+
+        fetch(`/fornecedores/buscar?nome=${termo}`)
+            .then(response => response.json())
+            .then(data => {
+                let lista = document.getElementById("autocomplete-list");
+                lista.innerHTML = "";
+                data.forEach(fornecedor => {
+                    let item = document.createElement("div");
+                    item.textContent = fornecedor.nome;
+                    item.onclick = function () {
+                        document.getElementById("fornecedor").value = fornecedor.nome;
+                        document.getElementById("fornecedor_id").value = fornecedor.id; // Define o ID oculto
+                        lista.innerHTML = "";
+                    };
+                    lista.appendChild(item);
+                });
+            });
+    }
+</script>
+
+<script>
+    function carregarFornecedores() {
+        fetch('/compras/fornecedores')
+            .then(response => response.json())
+            .then(data => {
+                let select = document.getElementById("fornecedor_id");
+                select.innerHTML = '<option value="">Selecione um fornecedor</option>'; // Resetar o select
+                
+                data.forEach(fornecedor => {
+                    let option = document.createElement("option");
+                    option.value = fornecedor.id;
+                    option.textContent = fornecedor.nome;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => console.error("Erro ao carregar fornecedores:", error));
+    }
+
+    // Carrega os fornecedores sempre que a aba "Cadastro de Compras" for ativada
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector("a[onclick=\"showPage('CadastroCompras')\"]").addEventListener("click", carregarFornecedores);
+    });
+</script>
+
+
+<script>
+    function carregarComprasAprovadas() {
+        fetch('/compras/aprovadas')
+            .then(response => response.json())
+            .then(data => {
+                let tabela = document.querySelector("#ComprasAprovadas tbody");
+                tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
+
+                data.forEach(compra => {
+                    let row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${compra.fornecedor ? compra.fornecedor.nome : "Fornecedor não encontrado"}</td>
+                        <td>R$ ${compra.valor.toFixed(2)}</td>
+                         <td>${compra.dataPedido || "Não definida"}</td>
+                        <td>${compra.dataPagamento || "Não definida"}</td>
+                        <td>${compra.dataEntrega || "Não definida"}</td>
+                        <td>${compra.numeroPedido}</td>
+                        <td>${compra.comprador || "Não definido"}</td>
+                    `;
+                    tabela.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Erro ao carregar compras aprovadas:", error));
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector("a[onclick=\"showPage('ComprasAprovadas')\"]")
+            .addEventListener("click", carregarComprasAprovadas);
+    });
+</script>
+
+<script>
+    function filtrarCompras() {
+        let fornecedor = document.getElementById("fornecedor").value.trim();
+        let dataInicio = document.getElementById("data_inicio").value;
+        let dataFim = document.getElementById("data_fim").value;
+
+        let url = `/compras/relatorio?`;
+        if (fornecedor) url += `fornecedor=${encodeURIComponent(fornecedor)}&`;
+        if (dataInicio) url += `dataInicio=${dataInicio}&`;
+        if (dataFim) url += `dataFim=${dataFim}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                let tabela = document.querySelector(".relatorio-lista");
+                tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
+
+                data.forEach(compra => {
+                    let row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${compra.fornecedor ? compra.fornecedor.nome : "Fornecedor não encontrado"}</td>
+                        <td>R$ ${compra.valor.toFixed(2)}</td>
+                        <td>${compra.dataPedido || "Não definida"}</td>
+                        <td>${compra.dataPagamento || "Não definida"}</td>
+                        <td>${compra.dataEntrega || "Não definida"}</td>
+                        <td>${compra.numeroPedido}</td>
+                        <td>${compra.comprador || "Não definido"}</td>
+                    `;
+                    tabela.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Erro ao carregar relatório de compras:", error));
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("busca").addEventListener("keyup", pesquisarFornecedor);
+    });
+
+    function pesquisarFornecedor() {
+        let termo = document.getElementById("busca").value.trim();
+        let tabela = document.querySelector(".fornecedor-lista");
+
+        // Se a tabela não existir, interrompe a execução para evitar erro
+        if (!tabela) {
+            console.error("Elemento .fornecedor-lista não encontrado!");
+            return;
+        }
+
+        fetch(`/fornecedores/buscar?termo=${encodeURIComponent(termo)}`)
+            .then(response => response.json())
+            .then(data => {
+                tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
+
+                data.forEach(fornecedor => {
+                    let row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${fornecedor.nome}</td>
+                        <td>${fornecedor.cnpj}</td>
+                        <td>R$ ${fornecedor.totalAprovado ? fornecedor.totalAprovado.toFixed(2) : '0.00'}</td>
+                        <td>R$ ${fornecedor.totalPendente ? fornecedor.totalPendente.toFixed(2) : '0.00'}</td>
+                    `;
+                    tabela.appendChild(row);
+                });
+            })
+            .catch(error => console.error("Erro ao buscar fornecedores:", error));
+    }
+</script>
+
+<script>
+    document.getElementById("cnpj").addEventListener("input", function (e) {
+        let valor = e.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+        if (valor.length <= 11) { 
+            // Formato de CPF: 000.000.000-00
+            valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+            valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+            valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        } else { 
+            // Formato de CNPJ: 00.000.000/0000-00
+            valor = valor.replace(/(\d{2})(\d)/, "$1.$2");
+            valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+            valor = valor.replace(/(\d{3})(\d)/, "$1/$2");
+            valor = valor.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+        }
+
+        e.target.value = valor;
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("cadastroFornecedorForm");
+
+        if (!form) {
+            console.error("Erro: O formulário de cadastro de fornecedor não foi encontrado!");
+            return;
+        }
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let nome = document.getElementById("fornecedorNome").value.trim();
+            let cnpj = document.getElementById("fornecedorCnpj").value.trim();
+
+            let formData = new URLSearchParams();
+            formData.append("nome", nome);
+            formData.append("cnpj", cnpj);
+
+            fetch("/fornecedores", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                exibirPopup(data.mensagem, data.status === "sucesso", data.status);
+            })
+            .catch(error => {
+                console.error("Erro ao cadastrar fornecedor:", error);
+                exibirPopup("Erro ao processar a solicitação!", false, "erro");
+            });
+        });
+    });
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -269,91 +494,160 @@
 
         <div id="cadastroUsuario" class="page">
             <h2>Cadastro de Usuário</h2>
-            <form action="/usuarios" method="POST">
+            <form action="/usuarios" method="post">
                 <label for="nome">Nome:</label>
                 <input type="text" id="nome" name="nome" required>
-                <label for="login">Login:</label>
-                <input type="text" id="login" name="login" required>
+            
+                <label for="usuario">Usuário:</label>
+                <input type="text" id="usuario" name="usuario" required> <!-- ALTERADO -->
+            
                 <label for="senha">Senha:</label>
                 <input type="password" id="senha" name="senha" required>
-                <label for="acesso">Acesso:</label>
-                <select id="acesso" name="acesso">
+            
+                <label for="tipo">Tipo de Acesso:</label>
+                <select id="tipo" name="tipo"> <!-- ALTERADO -->
                     <option value="Administrador">Administrador</option>
                     <option value="Comprador">Comprador</option>
                 </select>
+            
                 <button type="submit">Cadastrar Usuário</button>
             </form>
+            
         </div>
 
         <div id="CadastroCompras" class="page">
             <h2>Cadastro de Compras</h2>
+        
             <form action="/compras" method="POST">
-                <label for="fornecedor">Fornecedor:</label>
-                <input type="text" id="fornecedor" name="fornecedor" required>
+                <label for="fornecedor_id">Fornecedor:</label>
+                <select id="fornecedor_id" name="fornecedor_id" required>
+                    <option value="">Selecione um fornecedor</option>
+                    <th:block th:each="fornecedor : ${fornecedores}">
+                        <option th:value="${fornecedor.id}" th:text="${fornecedor.nome}"></option>
+                    </th:block>
+                </select>
+                
+        
                 <label for="numero_pedido">Número Pedido:</label>
                 <input type="text" id="numero_pedido" name="numero_pedido" required>
+        
                 <label for="valor">Valor:</label>
                 <input type="number" step="0.01" id="valor" name="valor" required>
+        
                 <label for="data_pedido">Data Pedido:</label>
                 <input type="date" id="data_pedido" name="data_pedido" required>
+        
                 <label for="data_pagamento">Data Pagamento:</label>
                 <input type="date" id="data_pagamento" name="data_pagamento">
+        
                 <label for="data_entrega">Data Entrega:</label>
                 <input type="date" id="data_entrega" name="data_entrega">
-                <label for="descricao">Descrição Pedido:</label>
-                <textarea id="descricao" name="descricao" rows="3"></textarea>
-                <button type="submit">Cadastrar</button>
-                <button type="reset">Limpar</button>
+        
+                <label for="descricao">Descrição:</label>
+                <textarea id="descricao" name="descricao"></textarea>
+        
+                <button type="submit">Cadastrar Compra</button>
             </form>
         </div>
+        
+               <div id="CadastroFornecedor" class="page">
+                <h2>Cadastro de Fornecedores</h2>
+                <form id="cadastroFornecedorForm">
+                    <label for="fornecedorNome">Nome:</label>
+                    <input type="text" id="fornecedorNome" name="nome" required>
+    
+                    <label for="fornecedorCnpj">CPF/CNPJ:</label>
+                    <input type="text" id="fornecedorCnpj" name="cnpj" required>
+    
+                    <button type="submit">Cadastrar Fornecedor</button>
+                    <button type="reset">Limpar</button>
+                </form>
+            </div>
+       
 
-        <div id="CadastroFornecedor" class="page">
-            <h2>Cadastro de Fornecedores</h2>
-            <form action="/fornecedores" method="POST">
-                <label for="nome">Nome:</label>
-                <input type="text" id="nome" name="nome" required>
-
-                <label for="cnpj">CNPJ:</label>
-                <input type="text" id="cnpj" name="cnpj" required>
-
-                <button type="submit">Cadastrar Fornecedor</button>
-                <button type="reset">Limpar</button>
-            </form>
-        </div>
-
-        <div id="AprovarCompras" class="page">
-            <h2>Aprovar Compras</h2>
-            <form action="/AprovarCompras" method="POST">
-                <h2>Tela de Aprovação de Compras</h2>
-                <table border="1">
-                    <thead>
-                        <tr>
-                            <th>Fornecedor</th>
-                            <th>Valor</th>
-                            <th>Data Pagamento</th>
-                            <th>Data Entrega</th>
-                            <th>Número Pedido</th>
-                            <th>Comprador</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-                <button onclick="aprovarCompra()">Aprovar</button>
-                <button onclick="cancelarCompra()">Cancelar</button>
-        </div>
-        <script>
-            function aprovarCompra() {
-                alert("Compra aprovada com sucesso!");
-            }
-            function cancelarCompra() {
-                alert("Compra cancelada.");
-            }
-        </script>
-        </form>
-
+            <div id="AprovarCompras" class="page">
+                <h2>Aprovar Compras</h2>
+                <form action="/AprovarCompras" method="POST">
+                    <h2>Tela de Aprovação de Compras</h2>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>Fornecedor</th>
+                                <th>Valor</th>
+                                <th>Data Pedido</th>
+                                <th>Data Pagamento</th>
+                                <th>Data Entrega</th>
+                                <th>Número Pedido</th>
+                                <th>Comprador</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    
+                        </tbody>
+                    </table>
+                    <button onclick="aprovarCompra()">Aprovar</button>
+                    <button onclick="cancelarCompra()">Cancelar</button>
+            </div>
+    
+            <script>
+                function carregarComprasPendentes() {
+                    fetch('/compras/pendentes')
+                        .then(response => response.json())
+                        .then(data => {
+                            let tabela = document.querySelector("#AprovarCompras tbody");
+                            tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
+            
+                            data.forEach(compra => {
+                                let row = document.createElement("tr");
+            
+                                row.innerHTML = `
+                                    <td>${compra.fornecedor.nome}</td>
+                                    <td>R$ ${compra.valor.toFixed(2)}</td>
+                                    <td>${compra.dataPedido || "Não definida"}</td>
+                                    <td>${compra.dataPagamento || "Não definida"}</td>
+                                    <td>${compra.dataEntrega || "Não definida"}</td>
+                                    <td>${compra.numeroPedido}</td>
+                                    <td>${compra.comprador || "Não definido"}</td>
+                                    <td>
+                                        <button onclick="aprovarCompra(${compra.id})">Aprovar</button>
+                                        <button onclick="cancelarCompra(${compra.id})">Cancelar</button>
+                                    </td>
+                                `;
+                                tabela.appendChild(row);
+                            });
+                        })
+                        .catch(error => console.error("Erro ao carregar compras pendentes:", error));
+                }
+            
+                document.addEventListener("DOMContentLoaded", function () {
+                    document.querySelector("a[onclick=\"showPage('AprovarCompras')\"]")
+                        .addEventListener("click", carregarComprasPendentes);
+                });
+            
+                function aprovarCompra(id) {
+                    fetch(`/compras/aprovar/${id}`, { method: "PUT" })
+                        .then(response => response.text())
+                        .then(() => {
+                            alert("Compra aprovada com sucesso!");
+                            carregarComprasPendentes(); // Atualiza a tabela após aprovação
+                        })
+                        .catch(error => console.error("Erro ao aprovar compra:", error));
+                }
+            
+                function cancelarCompra(id) {
+                    fetch(`/compras/cancelar/${id}`, { method: "PUT" })
+                        .then(response => response.text())
+                        .then(() => {
+                            alert("Compra cancelada.");
+                            carregarComprasPendentes(); // Atualiza a tabela após cancelamento
+                        })
+                        .catch(error => console.error("Erro ao cancelar compra:", error));
+                }
+            </script>
+    
+     
+  
 
         <div id="ComprasAprovadas" class="page">
             <h2>Compras Aprovadas</h2>
@@ -362,6 +656,7 @@
                     <tr>
                         <th>Fornecedor</th>
                         <th>Valor</th>
+                        <th>Data Pedido</th>
                         <th>Data Pagamento</th>
                         <th>Data Entrega</th>
                         <th>Número Pedido</th>
@@ -369,11 +664,18 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    <!-- As compras aprovadas serão carregadas aqui -->
                 </tbody>
             </table>
             <button onclick="exportarPDF()">Exportar PDF</button>
+
+<script>
+    function exportarPDF() {
+        window.location.href = "/compras/exportar-pdf";
+    }
+</script>
         </div>
+        
 
         <div id="RelatorioCompras" class="page">
             <h2>Relatório de Compras</h2>
@@ -410,12 +712,14 @@
                     <tr>
                         <th>Nome</th>
                         <th>CNPJ</th>
+                        <th>Total Aprovado (R$)</th>
+                        <th>Total Pendente (R$)</th>
                     </tr>
                 </thead>
                 <tbody class="fornecedor-lista">
-
                 </tbody>
             </table>
+            
         </div>
 
 
@@ -424,4 +728,131 @@
     <footer style="position: absolute; bottom: 10px; width: calc(100% - 250px); text-align: center;">
         <p>&copy; 2025 Minha Empresa. Todos os direitos reservados.</p>
     </footer>
+    
+<!-- Script para exibir um popup após o cadastro de usuário */   --> 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+    
+            form.addEventListener("submit", function (event) {
+                event.preventDefault(); // Impede o envio padrão do formulário
+    
+                Swal.fire({
+                title: "Confirmação",
+                text: "Deseja realmente cadastrar este usuario?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Sim, cadastrar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submeter o formulário após confirmação
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+    
+<!-- script para exibir um popup após o cadastro de compra -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("#CadastroCompras form");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Impede o envio imediato do formulário
+
+            Swal.fire({
+                title: "Confirmação",
+                text: "Deseja realmente cadastrar esta compra?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Sim, cadastrar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submeter o formulário após confirmação
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+
+
+    
+<!-- script para exibir um popup após Aprovar/Cancelar Compras -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const aprovarButton = document.querySelector("#aprovarCompra");
+        const cancelarButton = document.querySelector("#cancelarCompra");
+        
+        if (aprovarButton) {
+            aprovarButton.addEventListener("click", function (event) {
+                event.preventDefault(); // Impede o comportamento padrão do botão
+                
+                Swal.fire({
+                    title: "Confirmação",
+                    text: "Deseja realmente aprovar esta compra?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Sim, aprovar",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submeter o formulário após confirmação
+                    form.submit();
+                    }
+                });
+            });
+        }
+
+        if (cancelarButton) {
+            cancelarButton.addEventListener("click", function (event) {
+                event.preventDefault(); // Impede o comportamento padrão do botão
+                
+                Swal.fire({
+                    title: "Confirmação",
+                    text: "Deseja realmente cancelar esta compra?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Sim, cancelar",
+                    cancelButtonText: "Não"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                      // Submeter o formulário após confirmação
+                    form.submit();
+                    }
+                });
+            });
+        }
+    });
+</script>
+
+<!-- script para exibir um popup após o cadastro de fornecedor -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("#cadastroFornecedorForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            Swal.fire({
+                title: "Confirmação",
+                text: "Deseja realmente cadastrar este fornecedor?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Sim, cadastrar",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submeter o formulário após confirmação
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+
+
 </body>
