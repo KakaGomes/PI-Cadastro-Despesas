@@ -7,5 +7,5 @@ import com.example.PI.Entities.Usuario;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Usuario findByUsuarioAndSenha(String usuario, String senha);
+    Usuario findByUsuario(String usuario); // Buscar apenas pelo nome do usuário
 }
