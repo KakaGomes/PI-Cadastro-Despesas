@@ -160,7 +160,7 @@
         window.onload = () => showPage('cadastroUsuario');
     </script>
 
-    <script>
+    <!-- <script>
         function filtrarCompras() {
             let fornecedor = document.getElementById("fornecedor").value.toLowerCase();
             let dataInicio = document.getElementById("data_inicio").value;
@@ -189,7 +189,7 @@
             });
         }
     </script>
-
+ -->
 
 <script>
     function pesquisarFornecedor() {
@@ -295,11 +295,11 @@
                     row.innerHTML = `
                         <td>${compra.fornecedor ? compra.fornecedor.nome : "Fornecedor não encontrado"}</td>
                         <td>R$ ${compra.valor.toFixed(2)}</td>
-                         <td>${compra.dataPedido || "Não definida"}</td>
+                        <td>${compra.dataPedido || "Não definida"}</td>
                         <td>${compra.dataPagamento || "Não definida"}</td>
                         <td>${compra.dataEntrega || "Não definida"}</td>
                         <td>${compra.numeroPedido}</td>
-                        <td>${compra.comprador || "Não definido"}</td>
+                        <td>${compra.comprador || "Não definido"}</td> <!-- NOVO CAMPO -->
                     `;
                     tabela.appendChild(row);
                 });
@@ -319,16 +319,37 @@
         let dataInicio = document.getElementById("data_inicio").value;
         let dataFim = document.getElementById("data_fim").value;
 
+        // Criar a URL dinâmica conforme os filtros preenchidos
         let url = `/compras/relatorio?`;
-        if (fornecedor) url += `fornecedor=${encodeURIComponent(fornecedor)}&`;
-        if (dataInicio) url += `dataInicio=${dataInicio}&`;
-        if (dataFim) url += `dataFim=${dataFim}`;
+        let params = [];
+        if (fornecedor) params.push(`fornecedor=${encodeURIComponent(fornecedor)}`);
+        if (dataInicio) params.push(`dataInicio=${dataInicio}`);
+        if (dataFim) params.push(`dataFim=${dataFim}`);
 
+        // Se houver parâmetros, adiciona à URL
+        if (params.length > 0) {
+            url += params.join("&");
+        }
+
+        console.log("Requisição enviada para:", url); // Log para depuração
+
+        // Fazer a requisição para o servidor
         fetch(url)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Erro na resposta do servidor");
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log("Dados recebidos:", data); // Log para depuração
                 let tabela = document.querySelector(".relatorio-lista");
                 tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
+
+                if (data.length === 0) {
+                    tabela.innerHTML = "<tr><td colspan='7'>Nenhuma compra encontrada.</td></tr>";
+                    return;
+                }
 
                 data.forEach(compra => {
                     let row = document.createElement("tr");
@@ -340,14 +361,18 @@
                         <td>${compra.dataPagamento || "Não definida"}</td>
                         <td>${compra.dataEntrega || "Não definida"}</td>
                         <td>${compra.numeroPedido}</td>
-                        <td>${compra.comprador || "Não definido"}</td>
+                        <td>${compra.comprador || "Não definido"}</td> <!-- Corrigido campo comprador -->
                     `;
                     tabela.appendChild(row);
                 });
             })
-            .catch(error => console.error("Erro ao carregar relatório de compras:", error));
+            .catch(error => {
+                console.error("Erro ao carregar relatório de compras:", error);
+                alert("Erro ao buscar dados. Verifique o console para mais detalhes.");
+            });
     }
 </script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("busca").addEventListener("keyup", pesquisarFornecedor);
@@ -447,6 +472,7 @@
 
 </head>
 
+
 <body>
     <div class="sidebar">
         <h1>Menu</h1>
@@ -465,6 +491,7 @@
             </script>
         </ul>
     </div>
+
 
 
 
@@ -563,26 +590,23 @@
 
             <div id="AprovarCompras" class="page">
                 <h2>Aprovar Compras</h2>
-                <form action="/AprovarCompras" method="POST">
-                    <h2>Tela de Aprovação de Compras</h2>
-                    <table border="1">
-                        <thead>
-                            <tr>
-                                <th>Fornecedor</th>
-                                <th>Valor</th>
-                                <th>Data Pedido</th>
-                                <th>Data Pagamento</th>
-                                <th>Data Entrega</th>
-                                <th>Número Pedido</th>
-                                <th>Comprador</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </form>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Fornecedor</th>
+                            <th>Valor</th>
+                            <th>Data Pedido</th>
+                            <th>Data Pagamento</th>
+                            <th>Data Entrega</th>
+                            <th>Número Pedido</th>
+                            <th>Comprador</th> <!-- NOVO CAMPO -->
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- As compras pendentes serão carregadas aqui -->
+                    </tbody>
+                </table>
             </div>
 
             <script>
@@ -597,14 +621,14 @@
                                 let row = document.createElement("tr");
 
                                 row.innerHTML = `
-                                    <td>${compra.fornecedor.nome}</td>
-                                    <td>R$ ${compra.valor.toFixed(2)}</td>
-                                    <td>${compra.dataPedido || "Não definida"}</td>
-                                    <td>${compra.dataPagamento || "Não definida"}</td>
-                                    <td>${compra.dataEntrega || "Não definida"}</td>
-                                    <td>${compra.numeroPedido}</td>
-                                    <td>${compra.comprador || "Não definido"}</td>
-                                    <td>
+                                   <td>${compra.fornecedor.nome}</td>
+                        <td>R$ ${compra.valor.toFixed(2)}</td>
+                        <td>${compra.dataPedido || "Não definida"}</td>
+                        <td>${compra.dataPagamento || "Não definida"}</td>
+                        <td>${compra.dataEntrega || "Não definida"}</td>
+                        <td>${compra.numeroPedido}</td>
+                        <td>${compra.comprador || "Não definido"}</td> <!-- NOVO CAMPO -->
+                        <td>
                                         <button type="button" onclick="aprovarCompra(${compra.id})">Aprovar</button>
                                         <button type="button" onclick="cancelarCompra(${compra.id})">Cancelar</button>
                                     </td>
@@ -663,25 +687,25 @@
      
   
 
-        <div id="ComprasAprovadas" class="page">
-            <h2>Compras Aprovadas</h2>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Fornecedor</th>
-                        <th>Valor</th>
-                        <th>Data Pedido</th>
-                        <th>Data Pagamento</th>
-                        <th>Data Entrega</th>
-                        <th>Número Pedido</th>
-                        <th>Comprador</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- As compras aprovadas serão carregadas aqui -->
-                </tbody>
-            </table>
-            <button onclick="exportarPDF()">Exportar PDF</button>
+    <div id="ComprasAprovadas" class="page">
+        <h2>Compras Aprovadas</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Fornecedor</th>
+                    <th>Valor</th>
+                    <th>Data Pedido</th>
+                    <th>Data Pagamento</th>
+                    <th>Data Entrega</th>
+                    <th>Número Pedido</th>
+                    <th>Comprador</th> <!-- NOVO CAMPO -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- As compras aprovadas serão carregadas aqui -->
+            </tbody>
+        </table>
+        <button onclick="exportarPDF()">Exportar PDF</button>
 
 <script>
     function exportarPDF() {
@@ -709,11 +733,11 @@
                         <th>Data Pagamento</th>
                         <th>Data Entrega</th>
                         <th>Número Pedido</th>
-                        <th>Comprador</th>
+                        <th>Comprador</th> <!-- NOVO CAMPO -->
                     </tr>
                 </thead>
                 <tbody class="relatorio-lista">
-
+                    <!-- Os dados serão carregados via script -->
                 </tbody>
             </table>
         </div>

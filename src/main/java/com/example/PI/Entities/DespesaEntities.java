@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "compras") // Certifique-se de que a anotação aponta para "compras"
+@Table(name = "compras") // Certifique-se de que a tabela correta está sendo usada
 public class DespesaEntities {
 
     @Id
@@ -38,6 +38,10 @@ public class DespesaEntities {
     @Column(nullable = false)
     private StatusCompra status = StatusCompra.PENDENTE;
 
+    // Novo campo para armazenar o usuário comprador
+    @Column(name = "comprador", nullable = false)
+    private String comprador;
+
     public enum StatusCompra {
         PENDENTE, APROVADA, CANCELADA
     }
@@ -69,4 +73,7 @@ public class DespesaEntities {
 
     public StatusCompra getStatus() { return status; }
     public void setStatus(StatusCompra status) { this.status = status; }
+
+    public String getComprador() { return comprador; }
+    public void setComprador(String comprador) { this.comprador = comprador; }
 }
