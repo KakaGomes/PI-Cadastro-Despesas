@@ -29,7 +29,7 @@ public class UsuarioController {
 
      
 
-    // ✅ NOVO MÉTODO PARA SUPORTAR FORMULÁRIOS HTML
+    
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView criarUsuarioViaFormulario(RedirectAttributes attributes,
             @RequestParam String nome,

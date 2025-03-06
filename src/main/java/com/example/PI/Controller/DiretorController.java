@@ -23,7 +23,7 @@ public class DiretorController {
     public String carregarPaginaDiretor(Model model) {
         List<FornecedorEntities> fornecedores = fornecedorRepository.findAll();
         model.addAttribute("fornecedores", fornecedores);
-        return "diretor"; // Nome do arquivo HTML (diretor.html)
+        return "diretor"; 
     }
 
     @GetMapping("/teste-fornecedores")

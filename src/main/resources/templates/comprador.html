@@ -160,37 +160,6 @@
         window.onload = () => showPage('cadastroUsuario');
     </script>
 
-    <!-- <script>
-        function filtrarCompras() {
-            let fornecedor = document.getElementById("fornecedor").value.toLowerCase();
-            let dataInicio = document.getElementById("data_inicio").value;
-            let dataFim = document.getElementById("data_fim").value;
-            let linhas = document.querySelectorAll(".relatorio-lista tr");
-
-            linhas.forEach(linha => {
-                let nomeFornecedor = linha.children[0].innerText.toLowerCase();
-                let dataCompra = linha.children[2].innerText;
-
-                let exibir = true;
-
-                if (fornecedor && !nomeFornecedor.includes(fornecedor)) {
-                    exibir = false;
-                }
-
-                if (dataInicio && dataCompra < dataInicio) {
-                    exibir = false;
-                }
-
-                if (dataFim && dataCompra > dataFim) {
-                    exibir = false;
-                }
-
-                linha.style.display = exibir ? "table-row" : "none";
-            });
-        }
-    </script>
- -->
-
 <script>
     function pesquisarFornecedor() {
         let termo = document.getElementById("busca").value.trim();
@@ -199,7 +168,7 @@
             .then(response => response.json())
             .then(data => {
                 let tabela = document.querySelector(".fornecedor-lista");
-                tabela.innerHTML = ""; // Limpa a tabela antes de adicionar os dados
+                tabela.innerHTML = "";
 
                 data.forEach(fornecedor => {
                     let row = document.createElement("tr");
@@ -522,13 +491,13 @@
                 <input type="text" id="nome" name="nome" required>
             
                 <label for="usuario">Usuário:</label>
-                <input type="text" id="usuario" name="usuario" required> <!-- ALTERADO -->
+                <input type="text" id="usuario" name="usuario" required> 
             
                 <label for="senha">Senha:</label>
                 <input type="password" id="senha" name="senha" required>
             
                 <label for="tipo">Tipo de Acesso:</label>
-                <select id="tipo" name="tipo"> <!-- ALTERADO -->
+                <select id="tipo" name="tipo"> 
                     <option value="Administrador">Administrador</option>
                     <option value="Comprador">Comprador</option>
                 </select>
@@ -599,7 +568,7 @@
                             <th>Data Pagamento</th>
                             <th>Data Entrega</th>
                             <th>Número Pedido</th>
-                            <th>Comprador</th> <!-- NOVO CAMPO -->
+                            <th>Comprador</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -698,7 +667,7 @@
                     <th>Data Pagamento</th>
                     <th>Data Entrega</th>
                     <th>Número Pedido</th>
-                    <th>Comprador</th> <!-- NOVO CAMPO -->
+                    <th>Comprador</th> 
                 </tr>
             </thead>
             <tbody>
@@ -733,7 +702,7 @@
                         <th>Data Pagamento</th>
                         <th>Data Entrega</th>
                         <th>Número Pedido</th>
-                        <th>Comprador</th> <!-- NOVO CAMPO -->
+                        <th>Comprador</th> 
                     </tr>
                 </thead>
                 <tbody class="relatorio-lista">

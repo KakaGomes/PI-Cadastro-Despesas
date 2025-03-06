@@ -41,7 +41,7 @@ public class DespesaController {
     public String mostrarFormularioCompra(Model model) {
         List<FornecedorEntities> fornecedores = fornecedorRepository.findAll();
         model.addAttribute("fornecedores", fornecedores);
-        return "cadastro_compras"; // Nome do arquivo HTML que será renderizado
+        return "cadastro_compras"; 
     }
      
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -75,7 +75,7 @@ public class DespesaController {
         if (data_entrega != null) novaCompra.setDataEntrega(LocalDate.parse(data_entrega));
         novaCompra.setDescricao(descricao);
         novaCompra.setStatus(DespesaEntities.StatusCompra.PENDENTE);
-        novaCompra.setComprador(usuarioLogado.getUsuario()); // Associa o comprador
+        novaCompra.setComprador(usuarioLogado.getUsuario()); 
 
         despesaRepository.save(novaCompra);
 

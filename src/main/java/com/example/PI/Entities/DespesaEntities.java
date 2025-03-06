@@ -38,7 +38,6 @@ public class DespesaEntities {
     @Column(nullable = false)
     private StatusCompra status = StatusCompra.PENDENTE;
 
-    // Novo campo para armazenar o usuário comprador
     @Column(name = "comprador", nullable = false)
     private String comprador;
 
